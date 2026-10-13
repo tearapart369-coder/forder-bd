@@ -2,32 +2,55 @@
 
 Lightweight F-commerce order + inventory + status tracker for Bangladeshi Facebook sellers.
 
-## Supabase Database Setup
+## Supabase Auth + Database (Full)
 
-1. Create a free project at https://supabase.com
-2. Go to SQL Editor and run the table creation SQL from the local README or below.
-3. Copy Project URL and anon key into environment variables.
+1. Create free project at https://supabase.com
+2. Enable Email provider in Authentication → Providers
+3. Run this SQL:
 
-## Environment Variables
+```sql
+create table products (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users not null,
+  name text not null,
+  name_bn text,
+  stock integer default 0,
+  price numeric default 0,
+  created_at timestamptz default now()
+);
+
+create table orders (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references auth.users not null,
+  customer_name text,
+  phone text,
+  product text,
+  qty integer default 1,
+  amount numeric default 0,
+  status text default 'pending',
+  note text,
+  created_at timestamptz default now()
+);
+
+alter table products enable row level security;
+alter table orders enable row level security;
+
+create policy "Users manage own products" on products for all using (auth.uid() = user_id);
+create policy "Users manage own orders" on orders for all using (auth.uid() = user_id);
+```
+
+4. Environment variables:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-NEXTAUTH_SECRET=your-long-random-secret
-NEXTAUTH_URL=http://localhost:3000
 ```
-
-## Demo Login
-- Username: `demo`
-- Password: `demo123`
 
 ## Features
 
-- Real auth (NextAuth)
-- Supabase database for products & orders (per seller)
-- Chat paste order entry
-- Inventory + status tracking
-- bKash reminder + courier helper
+- Full Supabase Auth (email + password signup/login)
+- Real database with RLS
+- Chat paste, inventory, status, bKash, courier
 - Bangla + English
 
 ## Run
@@ -37,4 +60,4 @@ npm install
 npm run dev
 ```
 
-Data is stored in Supabase. Create the tables first.
+Register with any email. Data is private per user.
