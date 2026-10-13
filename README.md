@@ -2,34 +2,39 @@
 
 Lightweight F-commerce order + inventory + status tracker for Bangladeshi Facebook sellers.
 
-## Features (MVP)
+## Supabase Database Setup
 
-- Paste Messenger chat to create order (basic parsing)
-- Inventory tracking (add products, stock, price)
-- Order status tracking (Pending → Confirmed → Booked → Delivered)
-- bKash payment reminder (copy message)
-- Courier booking helper (copy details for Pathao / Steadfast / RedX)
-- Bangla + English toggle
-- Data persists in browser localStorage
+1. Create a free project at https://supabase.com
+2. Go to SQL Editor and run the table creation SQL from the local README or below.
+3. Copy Project URL and anon key into environment variables.
 
-## Multi-seller login
+## Environment Variables
 
-Not included in this MVP (coming next). Currently single-user local demo.
+```
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+NEXTAUTH_SECRET=your-long-random-secret
+NEXTAUTH_URL=http://localhost:3000
+```
 
-## Run locally
+## Demo Login
+- Username: `demo`
+- Password: `demo123`
+
+## Features
+
+- Real auth (NextAuth)
+- Supabase database for products & orders (per seller)
+- Chat paste order entry
+- Inventory + status tracking
+- bKash reminder + courier helper
+- Bangla + English
+
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Deploy
-
-Connect this repo to Vercel and deploy.
-
-## Next steps
-
-- Real bKash / Nagad integration
-- Pathao / Steadfast API
-- Auth + multi-seller
-- Better Bangla AI parsing of chats
+Data is stored in Supabase. Create the tables first.
